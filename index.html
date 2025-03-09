@@ -3,35 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavşanı Engellerden Kaçır</title>
+    <title>Tavşan Zıplama Oyunu</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
             margin: 0;
             padding: 0;
-        }
-        h1 {
-            font-size: 36px;
-            color: #ff1493;
-            margin-top: 50px;
+            background-color: #f0f8ff;
         }
         #gameArea {
             position: relative;
-            width: 80%;
-            height: 400px;
-            margin: auto;
+            width: 100%;
+            height: 300px;
             background-color: #87cefa;
+            border-top: 2px solid #333;
             overflow: hidden;
-            border: 2px solid #333;
         }
         #tavsan {
             position: absolute;
-            font-size: 60px; /* Tavşanın boyutu */
-            left: 50%;
             bottom: 10px;
-            transform: translateX(-50%);
+            font-size: 60px;
+            left: 20px;
+            transform: scaleX(-1); /* Tavşanı yatayda ters çevirir */
         }
         .engel {
             position: absolute;
@@ -39,95 +32,133 @@
             height: 50px;
             background-color: #ff4500;
             bottom: 0;
-            animation: moveEngel 2s infinite linear;
+            animation: moveEngel 5s linear infinite;
         }
         @keyframes moveEngel {
-            0% { right: -50px; }
+            0% { right: -60px; }
             100% { right: 100%; }
         }
-        #aşkMesaj {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
+        #score {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #message {
+            font-size: 24px;
             color: #ff1493;
+            text-align: center;
+            display: none; /* Başlangıçta gizli */
+        }
+        #romanticMessage {
+            font-size: 28px;
+            color: #ff69b4;
+            text-align: center;
+            margin-top: 20px;
             display: none;
         }
     </style>
 </head>
 <body>
 
-<h1>Tavşanı Engellerden Kaçır!</h1>
 <div id="gameArea">
     <div id="tavsan">🐇</div>
-    <div id="aşkMesaj">Ben Tavşanları Çok Severim, Onları Mutlu Ettiğin İçin Teşekkürler! 🐇💖</div>
 </div>
+<div id="score">Skor: 0</div>
+<div id="message">Tavşan ve sevgilisi mutlu bir şekilde buluştu! 🐇❤️</div>
+<div id="romanticMessage">Sana bu tavşanı gönderdim çünkü seni çok seviyorum! 💖</div>
 
 <script>
     var tavsan = document.getElementById('tavsan');
     var gameArea = document.getElementById('gameArea');
+    var scoreElement = document.getElementById('score');
+    var messageElement = document.getElementById('message');
+    var romanticMessageElement = document.getElementById('romanticMessage');
     var gameWidth = gameArea.offsetWidth;
     var gameHeight = gameArea.offsetHeight;
-    var aşkMesaj = document.getElementById('aşkMesaj');
-    
-    // Tavşan'ın hareket etmesi için klavye kontrolü
-    document.addEventListener('keydown', function(e) {
-        var tavsanPosition = tavsan.getBoundingClientRect();
-        var tavsanX = tavsanPosition.x;
-        var tavsanY = tavsanPosition.y;
+    var score = 0;
+    var gameOver = false;
 
-        if (e.key === 'ArrowLeft' && tavsanX > 0) {
-            tavsan.style.left = (tavsanX - 10) + 'px';
+    // Tavşan zıplama fonksiyonu
+    function jump() {
+        if (!tavsan.classList.contains('jumping')) {
+            tavsan.classList.add('jumping');
+            tavsan.style.animation = 'jump 0.5s ease-out';
+            setTimeout(function() {
+                tavsan.classList.remove('jumping');
+                tavsan.style.animation = '';
+            }, 500);
         }
-        if (e.key === 'ArrowRight' && tavsanX < gameWidth - tavsan.offsetWidth) {
-            tavsan.style.left = (tavsanX + 10) + 'px';
-        }
-        if (e.key === 'ArrowUp' && tavsanY > 0) {
-            tavsan.style.bottom = (gameHeight - tavsanY - 60 + 10) + 'px';
-        }
-        if (e.key === 'ArrowDown' && tavsanY < gameHeight - tavsan.offsetHeight) {
-            tavsan.style.bottom = (gameHeight - tavsanY - 60 - 10) + 'px';
+    }
+
+    // Tavşanın zıplama hareketi için animasyon
+    document.addEventListener('keydown', function(e) {
+        if (e.key === ' ' && !gameOver) {
+            jump();
         }
     });
 
-    // Engel oluşturma
+    // Mobil cihazlarda dokunarak zıplama
+    gameArea.addEventListener('touchstart', function() {
+        if (!gameOver) {
+            jump();
+        }
+    });
+
+    // Engel oluşturma fonksiyonu
     function createEngel() {
         var engel = document.createElement('div');
         engel.className = 'engel';
-        engel.style.width = Math.random() * 60 + 'px';  // Engelin genişliği rastgele
-        engel.style.left = Math.random() * (gameWidth - 60) + 'px'; // Engelin pozisyonu rastgele
+        engel.style.height = (Math.random() * 50 + 50) + 'px'; // Engelin boyutları rastgele
+        engel.style.left = gameWidth + 'px'; // Başlangıçta ekranın dışında
         gameArea.appendChild(engel);
-
-        // Engel ekranın sonuna ulaşınca kaldırılacak
-        setTimeout(function() {
-            engel.remove();
-        }, 2000);
     }
 
     // Engel oluşturma her 2 saniyede bir
-    setInterval(createEngel, 2000);
+    setInterval(createEngel, 2000);  // Her 2 saniyede bir engel oluşturulacak
 
-    // Oyun bitti kontrolü
-    function checkGameOver() {
-        var tavsanPosition = tavsan.getBoundingClientRect();
+    // Engellerin ekran boyunca hareket etmesi
+    function moveEngels() {
         var engeller = document.getElementsByClassName('engel');
-        
         for (var i = 0; i < engeller.length; i++) {
             var engelPosition = engeller[i].getBoundingClientRect();
-            if (tavsanPosition.right > engelPosition.left && tavsanPosition.left < engelPosition.right &&
-                tavsanPosition.top < engelPosition.bottom && tavsanPosition.bottom > engelPosition.top) {
+            var tavsanPosition = tavsan.getBoundingClientRect();
+
+            // Eğer tavşan engelle çarpışırsa
+            if (tavsanPosition.right > engelPosition.left &&
+                tavsanPosition.left < engelPosition.right &&
+                tavsanPosition.bottom > engelPosition.top &&
+                tavsanPosition.top < engelPosition.bottom) {
                 alert("Oyun Bitti! Tavşan engelle çarpıştı.");
-                aşkMesaj.style.display = 'block'; // Aşk mesajını göster
-                setTimeout(function() {
-                    window.location.reload(); // Sayfayı yenileyerek oyunu baştan başlat
-                }, 3000);
+                gameOver = true;
+                showEnding(); // Oyun sonu mesajını göster
+                return;
+            }
+
+            // Engel ekranın dışına çıktıysa, engeli kaldır
+            if (engelPosition.right < 0) {
+                engeller[i].remove();
+                score++; // Skoru artır
+                scoreElement.textContent = 'Skor: ' + score;
+
+                // Skor 50'ye ulaştıysa, oyunu bitir
+                if (score >= 50) {
+                    gameOver = true;
+                    showEnding(); // Oyun sonu mesajını göster
+                }
             }
         }
     }
 
-    // Oyun her 100 milisaniyede bir kontrol edilerek oyun bitti mi bakılacak
-    setInterval(checkGameOver, 100);
+    // Engellerin hareket etmesi her 20 milisaniyede bir
+    setInterval(moveEngels, 20);
+
+    // Oyun sonu mesajını göster
+    function showEnding() {
+        messageElement.style.display = 'block'; // Alt yazıyı göster
+        scoreElement.style.display = 'none';   // Skoru gizle
+        romanticMessageElement.style.display = 'block'; // Romantik mesajı göster
+    }
+
 </script>
 
 </body>

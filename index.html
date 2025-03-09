@@ -1,34 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <title>Tavşanla Yakala 🥰</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tavşanın Gizemi</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; margin-top: 50px; background-color: #f0f8ff; }
-        #tavsan { width: 100px; transition: transform 1s; }
-        button { padding: 10px 20px; font-size: 18px; cursor: pointer; background-color: #ff69b4; color: white; border: none; }
-        h1 { font-size: 32px; color: #ff1493; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            color: #333;
+            text-align: center;
+            padding: 30px;
+        }
+        h1 {
+            font-size: 40px;
+            color: #ff1493;
+        }
+        #tavsan {
+            width: 150px;
+            margin: 20px;
+            transition: transform 1s;
+        }
+        #mesaj {
+            font-size: 24px;
+            color: #333;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
     </style>
 </head>
 <body>
-    <h1>Merhaba! Tavşanı takip et!</h1>
-    <img id="tavsan" src="https://example.com/tavsan.png" alt="Tavşan" />
-    <p id="mesaj">Tavşanın peşinden git! 👇</p>
-    <button onclick="gizliMesaj()">Tavşanı takip ettim!</button>
 
-    <script>
-        var tavsan = document.getElementById('tavsan');
-        var mesaj = document.getElementById('mesaj');
-        
-        function gizliMesaj() {
-            tavsan.style.transform = 'translateX(300px)';
-            mesaj.innerHTML = "Sana bu tavşanı gönderdim çünkü ben tavşanları çok seviyorum! 💖";
-            document.querySelector('button').style.display = 'none';
-        }
+<h1>Tavşanın Gizemli Yolu</h1>
+<img id="tavsan" src="https://example.com/tavsan.png" alt="Tavşan">
+<p id="mesaj">Tavşan sana bir mesaj bırakmış, bulmak için bir adım at!</p>
+<button onclick="ilkAdim()">İlk Adım</button>
 
+<script>
+    var mesaj = document.getElementById('mesaj');
+    var tavsan = document.getElementById('tavsan');
+
+    function ilkAdim() {
+        tavsan.style.transform = 'translateX(200px)';
+        mesaj.innerHTML = "İlk adımını attın, ancak tavşan hala kaçıyor! 😅";
+        document.querySelector('button').innerText = "Takip Etmeye Devam Et!";
+        document.querySelector('button').setAttribute('onclick', 'ikinciAdim()');
+    }
+
+    function ikinciAdim() {
+        tavsan.style.transform = 'translateY(200px)';
+        mesaj.innerHTML = "İkinci adımı da attın, tavşan biraz daha yaklaşıyor!";
+        document.querySelector('button').innerText = "Son Adımı Yap!";
+        document.querySelector('button').setAttribute('onclick', 'ucuncuAdim()');
+    }
+
+    function ucuncuAdim() {
+        tavsan.style.transform = 'translateX(0) translateY(0)';
+        mesaj.innerHTML = "Tebrikler! Tavşanı yakaladın ve ona ulaşmayı başardın!";
+        document.querySelector('button').style.display = 'none'; // Butonu gizle
         setTimeout(() => {
-            tavsan.style.transform = 'translateX(100px)';
-            mesaj.innerHTML = "Tavşan seni bekliyor! Ne yapacaksın?";
-        }, 3000);
-    </script>
+            alert("Tavşan sana bu mesajı gönderiyor: 'Sana olan sevgimi ifade ediyorum 💖'");
+        }, 1000);
+    }
+</script>
+
 </body>
 </html>

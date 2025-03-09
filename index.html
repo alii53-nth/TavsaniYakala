@@ -56,6 +56,19 @@
             margin-top: 20px;
             display: none;
         }
+        #startButton {
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #32cd32;
+            color: white;
+            border: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +79,7 @@
 <div id="score">Skor: 0</div>
 <div id="message">Tavşan ve sevgilisi mutlu bir şekilde buluştu! 🐇❤️</div>
 <div id="romanticMessage">Sana bu tavşanı gönderdim çünkü seni çok seviyorum! 💖</div>
+<button id="startButton" onclick="startGame()">Oyunu Başlat</button>
 
 <script>
     var tavsan = document.getElementById('tavsan');
@@ -73,6 +87,7 @@
     var scoreElement = document.getElementById('score');
     var messageElement = document.getElementById('message');
     var romanticMessageElement = document.getElementById('romanticMessage');
+    var startButton = document.getElementById('startButton');
     var gameWidth = gameArea.offsetWidth;
     var gameHeight = gameArea.offsetHeight;
     var score = 0;
@@ -159,7 +174,19 @@
         romanticMessageElement.style.display = 'block'; // Romantik mesajı göster
     }
 
+    // Oyunu başlat
+    function startGame() {
+        startButton.style.display = 'none';  // Başlat butonunu gizle
+        gameOver = false;
+        score = 0;
+        scoreElement.textContent = 'Skor: 0';
+        gameArea.innerHTML = '<div id="tavsan">🐇</div>'; // Tavşanı yeniden ekle
+        var tavsan = document.getElementById('tavsan');  // Tavşanı yeniden tanımla
+        // Skor ve oyun bitişi ile ilgili olayları başlat
+        setInterval(moveEngels, 20);
+        setInterval(createEngel, 2000);  // Engelleri başlat
+    }
 </script>
 
 </body>
-</html>
+    </html>

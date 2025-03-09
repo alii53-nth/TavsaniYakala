@@ -3,185 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavşanı Yakala!</title>
+    <title>Tavşanın Gizemi</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+            color: #333;
+            text-align: center;
+            padding: 30px;
         }
-        #gameCanvas {
-            background-color: #f4f4f4;
-            display: block;
-            margin: 0 auto;
-            border: 2px solid black;
+        h1 {
+            font-size: 40px;
+            color: #ff1493;
         }
-        #score {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+        #tavsan {
+            font-size: 100px; /* Emoji boyutunu arttırdım */
+            transition: transform 1s ease;
+            margin: 20px;
+        }
+        #mesaj {
             font-size: 24px;
             color: #333;
+            margin: 20px;
         }
-        #gameOver {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
-            color: red;
+        button {
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
+        .hidden {
             display: none;
         }
     </style>
 </head>
 <body>
-    <div id="score">Puan: 0</div>
-    <div id="gameOver">Oyun Bitti! Tavşan Aşkını Buldu! 💖</div>
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
-        const gameOverElement = document.getElementById('gameOver');
+<h1>Tavşanın Gizemli Yolu</h1>
+<p id="mesaj">Tavşan sana bir mesaj bırakmış, bulmak için bir adım at!</p>
+<p id="tavsan">🐇</p> <!-- Tavşan emoji -->
+<button onclick="ilkAdim()">İlk Adım</button>
 
-        let score = 0;
-        let isGameOver = false;
-        const bunnyWidth = 50;
-        const bunnyHeight = 50;
-        let bunnyX = 50;
-        let bunnyY = canvas.height - bunnyHeight - 10;
-        let bunnySpeed = 0;
-        let gravity = 0.8;
-        const jumpStrength = -15;
+<script>
+    var mesaj = document.getElementById('mesaj');
+    var tavsan = document.getElementById('tavsan');
+    var button = document.querySelector('button');
 
-        let obstacles = [];
-        const obstacleWidth = 40;  // Taş genişliği
-        const obstacleHeight = 40; // Taş yüksekliği
-        const obstacleSpeed = 3;
+    function ilkAdim() {
+        tavsan.style.transform = 'translateX(200px)';
+        mesaj.innerHTML = "İlk adımını attın, ancak tavşan hala kaçıyor! 😅";
+        button.innerText = "Takip Etmeye Devam Et!";
+        button.setAttribute('onclick', 'ikinciAdim()');
+    }
 
-        // Tavşanı çizme fonksiyonu
-        function drawBunny() {
-            ctx.fillStyle = '#FF69B4'; // Tavşanın rengi
-            ctx.beginPath();
-            ctx.arc(bunnyX + bunnyWidth / 2, bunnyY + bunnyHeight / 2, bunnyWidth / 2, 0, Math.PI * 2);
-            ctx.fill();
-        }
+    function ikinciAdim() {
+        tavsan.style.transform = 'translateY(200px)';
+        mesaj.innerHTML = "İkinci adımı da attın, tavşan biraz daha yaklaşıyor!";
+        button.innerText = "Son Adımı Yap!";
+        button.setAttribute('onclick', 'ucuncuAdim()');
+    }
 
-        // Taş engellerini çizme fonksiyonu
-        function drawObstacles() {
-            ctx.fillStyle = '#8B4513'; // Taş rengini kahverengi yapalım
-            for (let i = 0; i < obstacles.length; i++) {
-                ctx.beginPath();
-                ctx.moveTo(obstacles[i].x, obstacles[i].y);
-                ctx.arc(obstacles[i].x + obstacleWidth / 2, obstacles[i].y + obstacleHeight / 2, obstacleWidth / 2, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+    function ucuncuAdim() {
+        tavsan.style.transform = 'translateX(0) translateY(0)';
+        mesaj.innerHTML = "Tebrikler! Tavşanı yakaladın ve ona ulaşmayı başardın!";
+        button.style.display = 'none'; // Butonu gizle
+        setTimeout(() => {
+            alert("Tavşan sana bu mesajı gönderiyor: 'Sana olan sevgimi ifade ediyorum 💖'");
+        }, 1000);
+    }
+</script>
 
-        // Engellerin hareketini sağlama
-        function moveObstacles() {
-            for (let i = 0; i < obstacles.length; i++) {
-                obstacles[i].x -= obstacleSpeed;
-            }
-
-            // Engel ekran dışına çıkarsa, listeden çıkar
-            obstacles = obstacles.filter(obstacle => obstacle.x + obstacleWidth > 0);
-        }
-
-        // Zıplama fonksiyonu
-        function jump() {
-            if (bunnyY === canvas.height - bunnyHeight - 10) { // Sadece yere değdiğinde zıplamasını sağla
-                bunnySpeed = jumpStrength;
-            }
-        }
-
-        // Çarpışma kontrolü
-        function checkCollisions() {
-            for (let i = 0; i < obstacles.length; i++) {
-                if (bunnyX + bunnyWidth > obstacles[i].x &&
-                    bunnyX < obstacles[i].x + obstacleWidth &&
-                    bunnyY + bunnyHeight > obstacles[i].y) {
-                    isGameOver = true;
-                    gameOverElement.style.display = 'block';
-                }
-            }
-        }
-
-        // Skoru güncelleme
-        function updateScore() {
-            if (!isGameOver) {
-                score++;
-                scoreElement.textContent = 'Puan: ' + score;
-            }
-        }
-
-        // Oyun döngüsü
-        function gameLoop() {
-            if (isGameOver) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Ekranı temizle
-
-            // Tavşanı yer çekimi ile aşağıya çek
-            bunnySpeed += gravity;
-            bunnyY += bunnySpeed;
-
-            // Tavşan yerin altına düşmesin
-            if (bunnyY > canvas.height - bunnyHeight - 10) {
-                bunnyY = canvas.height - bunnyHeight - 10;
-                bunnySpeed = 0;
-            }
-
-            // Engelleri hareket ettir
-            moveObstacles();
-
-            // Tavşan ve engelleri çiz
-            drawBunny();
-            drawObstacles();
-
-            // Çarpışma kontrolü
-            checkCollisions();
-
-            // Skor güncelleme
-            updateScore();
-
-            // 2 saniyede bir yeni taş engel ekle
-            if (Math.random() < 0.02) {
-                let height = Math.floor(Math.random() * (canvas.height - obstacleHeight));
-                obstacles.push({x: canvas.width, y: height});
-            }
-
-            requestAnimationFrame(gameLoop); // Oyun döngüsünü sürekli olarak yenile
-        }
-
-        // Oyun başlatma
-        function startGame() {
-            gameOverElement.style.display = 'none';
-            score = 0;
-            isGameOver = false;
-            obstacles = [];
-            bunnyY = canvas.height - bunnyHeight - 10;
-            bunnySpeed = 0;
-            gameLoop();
-        }
-
-        // Klavye olayı
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !isGameOver) {
-                jump();
-            }
-            if (e.code === 'Enter' && isGameOver) {
-                startGame();
-            }
-        });
-
-        // Başlangıç ekranı
-        window.addEventListener('load', () => {
-            startGame();
-        });
-
-    </script>
 </body>
 </html>

@@ -69,6 +69,20 @@
             transform: translate(-50%, -50%);
             z-index: 1;
         }
+        #jumpButton {
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            display: none; /* Başlangıçta gizli */
+        }
     </style>
 </head>
 <body>
@@ -80,6 +94,7 @@
 <div id="message">Tavşan ve sevgilisi mutlu bir şekilde buluştu! 🐇❤️</div>
 <div id="romanticMessage">Sana bu tavşanı gönderdim çünkü seni çok seviyorum! 💖</div>
 <button id="startButton" onclick="startGame()">Oyunu Başlat</button>
+<button id="jumpButton" onclick="jump()">Zıpla</button>
 
 <script>
     var tavsan = document.getElementById('tavsan');
@@ -88,6 +103,7 @@
     var messageElement = document.getElementById('message');
     var romanticMessageElement = document.getElementById('romanticMessage');
     var startButton = document.getElementById('startButton');
+    var jumpButton = document.getElementById('jumpButton');
     var gameWidth = gameArea.offsetWidth;
     var gameHeight = gameArea.offsetHeight;
     var score = 0;
@@ -133,6 +149,7 @@
     var moveInterval;
     function startGame() {
         startButton.style.display = 'none';  // Başlat butonunu gizle
+        jumpButton.style.display = 'inline-block'; // Zıplama butonunu göster
         gameOver = false;
         score = 0;
         scoreElement.textContent = 'Skor: 0';
@@ -141,9 +158,12 @@
         scoreElement.style.display = 'block'; // Skoru göster
         messageElement.style.display = 'none';  // Oyun bitişi mesajını gizle
         romanticMessageElement.style.display = 'none'; // Romantik mesajı gizle
-        
-        createInterval = setInterval(createEngel, 2000);  // Her 2 saniyede bir engel oluşturulacak
-        moveInterval = setInterval(moveEngels, 20);  // Engellerin hareket etmesi her 20 milisaniyede bir
+
+        // 1 saniye sonra engelleri oluşturmaya başla
+        setTimeout(function() {
+            createInterval = setInterval(createEngel, 2000);  // Her 2 saniyede bir engel oluşturulacak
+            moveInterval = setInterval(moveEngels, 20);  // Engellerin hareket etmesi her 20 milisaniyede bir
+        }, 1000);
     }
 
     // Engellerin ekran boyunca hareket etmesi

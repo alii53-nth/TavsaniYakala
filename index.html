@@ -3,76 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavşanın Gizemi</title>
+    <title>Tavşanı Yakala</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: #f7f7f7;
-            color: #333;
             text-align: center;
-            padding: 30px;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
         }
         h1 {
-            font-size: 40px;
+            font-size: 36px;
             color: #ff1493;
+            margin-top: 50px;
         }
         #tavsan {
-            width: 150px;
-            margin: 20px;
-            transition: transform 1s;
-        }
-        #mesaj {
-            font-size: 24px;
-            color: #333;
-            margin: 20px;
+            width: 100px;
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 1s ease-in-out;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             background-color: #ff69b4;
             color: white;
             border: none;
-            border-radius: 20px;
             font-size: 18px;
             cursor: pointer;
-            margin: 10px;
+            margin-top: 20px;
         }
         button:hover {
             background-color: #ff1493;
+        }
+        #message {
+            font-size: 22px;
+            color: #333;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<h1>Tavşanın Gizemli Yolu</h1>
+<h1>Tavşanı Yakaladın mı?</h1>
 <img id="tavsan" src="https://example.com/tavsan.png" alt="Tavşan">
-<p id="mesaj">Tavşan sana bir mesaj bırakmış, bulmak için bir adım at!</p>
-<button onclick="ilkAdim()">İlk Adım</button>
+<p id="message">Tavşanı yakalamak için tıklayın!</p>
+<button onclick="yakalaTavsani()">Tavşanı Yakala!</button>
 
 <script>
-    var mesaj = document.getElementById('mesaj');
     var tavsan = document.getElementById('tavsan');
+    var message = document.getElementById('message');
 
-    function ilkAdim() {
-        tavsan.style.transform = 'translateX(200px)';
-        mesaj.innerHTML = "İlk adımını attın, ancak tavşan hala kaçıyor! 😅";
-        document.querySelector('button').innerText = "Takip Etmeye Devam Et!";
-        document.querySelector('button').setAttribute('onclick', 'ikinciAdim()');
+    function yakalaTavsani() {
+        // Tavşanı hareket ettir
+        tavsan.style.transform = 'translateX(' + randomX() + 'px) translateY(' + randomY() + 'px)';
+        
+        // Mesajı değiştir
+        message.innerHTML = "Tavşan kaçtı! Onu yakalamaya devam et!";
+        
+        // Butonu gizle ve yeni bir buton göster
+        document.querySelector('button').style.display = 'none';
+        setTimeout(function() {
+            message.innerHTML = "Son bir şans daha! Tavşanı yakala!";
+            var tekrarButon = document.createElement("button");
+            tekrarButon.innerHTML = "Tavşanı Tekrar Yakala!";
+            tekrarButon.onclick = yakalaTavsani;
+            document.body.appendChild(tekrarButon);
+        }, 1500);
     }
 
-    function ikinciAdim() {
-        tavsan.style.transform = 'translateY(200px)';
-        mesaj.innerHTML = "İkinci adımı da attın, tavşan biraz daha yaklaşıyor!";
-        document.querySelector('button').innerText = "Son Adımı Yap!";
-        document.querySelector('button').setAttribute('onclick', 'ucuncuAdim()');
+    function randomX() {
+        return Math.floor(Math.random() * 200) - 100; // -100 ile 100 arasında rastgele X hareketi
     }
 
-    function ucuncuAdim() {
-        tavsan.style.transform = 'translateX(0) translateY(0)';
-        mesaj.innerHTML = "Tebrikler! Tavşanı yakaladın ve ona ulaşmayı başardın!";
-        document.querySelector('button').style.display = 'none'; // Butonu gizle
-        setTimeout(() => {
-            alert("Tavşan sana bu mesajı gönderiyor: 'Sana olan sevgimi ifade ediyorum 💖'");
-        }, 1000);
+    function randomY() {
+        return Math.floor(Math.random() * 100) - 50; // -50 ile 50 arasında rastgele Y hareketi
     }
 </script>
 

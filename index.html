@@ -58,8 +58,8 @@
         const jumpStrength = -15;
 
         let obstacles = [];
-        const obstacleWidth = 20;
-        const obstacleHeight = 50;
+        const obstacleWidth = 40;  // Taş genişliği
+        const obstacleHeight = 40; // Taş yüksekliği
         const obstacleSpeed = 3;
 
         // Tavşanı çizme fonksiyonu
@@ -70,11 +70,14 @@
             ctx.fill();
         }
 
-        // Engel çizme fonksiyonu
+        // Taş engellerini çizme fonksiyonu
         function drawObstacles() {
-            ctx.fillStyle = '#228B22'; // Engel rengi
+            ctx.fillStyle = '#8B4513'; // Taş rengini kahverengi yapalım
             for (let i = 0; i < obstacles.length; i++) {
-                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacleWidth, obstacleHeight);
+                ctx.beginPath();
+                ctx.moveTo(obstacles[i].x, obstacles[i].y);
+                ctx.arc(obstacles[i].x + obstacleWidth / 2, obstacles[i].y + obstacleHeight / 2, obstacleWidth / 2, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
@@ -144,4 +147,41 @@
             // Skor güncelleme
             updateScore();
 
-            // 2 saniyede bir yeni engel ekle
+            // 2 saniyede bir yeni taş engel ekle
+            if (Math.random() < 0.02) {
+                let height = Math.floor(Math.random() * (canvas.height - obstacleHeight));
+                obstacles.push({x: canvas.width, y: height});
+            }
+
+            requestAnimationFrame(gameLoop); // Oyun döngüsünü sürekli olarak yenile
+        }
+
+        // Oyun başlatma
+        function startGame() {
+            gameOverElement.style.display = 'none';
+            score = 0;
+            isGameOver = false;
+            obstacles = [];
+            bunnyY = canvas.height - bunnyHeight - 10;
+            bunnySpeed = 0;
+            gameLoop();
+        }
+
+        // Klavye olayı
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !isGameOver) {
+                jump();
+            }
+            if (e.code === 'Enter' && isGameOver) {
+                startGame();
+            }
+        });
+
+        // Başlangıç ekranı
+        window.addEventListener('load', () => {
+            startGame();
+        });
+
+    </script>
+</body>
+</html>

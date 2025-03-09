@@ -48,7 +48,7 @@
 <body>
 
 <h1>Tavşanın Gizemli Yolu</h1>
-<p id="mesaj">Tavşan senden birşey saklıyor, bulmak için bir adım at!</p>
+<p id="mesaj">Tavşan sana bir mesaj bırakmış, bulmak için bir adım at!</p>
 <p id="tavsan">🐇</p> <!-- Tavşan emoji -->
 <button onclick="ilkAdim()">İlk Adım</button>
 
@@ -76,9 +76,7 @@
         mesaj.innerHTML = "Tebrikler! Tavşanı yakaladın ve ona ulaşmayı başardın!";
         button.style.display = 'none'; // Butonu gizle
         setTimeout(() => {
-            alert("Tavşan sana bu mesajı gönderiyor: 'Eee, sonunda beni yakaladın 😅
-                  Sanırım sana birşey söylemem gerekiyor 
-                  Sana olan sevgimi ifade ediyorum 💖'");
+            alert("Tavşan sana bu mesajı gönderiyor: 'Sana olan sevgimi ifade ediyorum 💖'");
         }, 1000);
     }
 </script>

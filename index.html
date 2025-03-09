@@ -30,7 +30,7 @@
             position: absolute;
             width: 50px;
             height: 50px;
-            background-color: #ff4500;
+            background-color: #ff4500; /* Engellerin rengi */
             bottom: 0;
             animation: moveEngel 5s linear infinite;
         }
@@ -129,7 +129,22 @@
     }
 
     // Engel oluşturma her 2 saniyede bir
-    setInterval(createEngel, 2000);  // Her 2 saniyede bir engel oluşturulacak
+    var createInterval;
+    var moveInterval;
+    function startGame() {
+        startButton.style.display = 'none';  // Başlat butonunu gizle
+        gameOver = false;
+        score = 0;
+        scoreElement.textContent = 'Skor: 0';
+        gameArea.innerHTML = '<div id="tavsan">🐇</div>'; // Tavşanı yeniden ekle
+        tavsan = document.getElementById('tavsan');  // Tavşanı yeniden tanımla
+        scoreElement.style.display = 'block'; // Skoru göster
+        messageElement.style.display = 'none';  // Oyun bitişi mesajını gizle
+        romanticMessageElement.style.display = 'none'; // Romantik mesajı gizle
+        
+        createInterval = setInterval(createEngel, 2000);  // Her 2 saniyede bir engel oluşturulacak
+        moveInterval = setInterval(moveEngels, 20);  // Engellerin hareket etmesi her 20 milisaniyede bir
+    }
 
     // Engellerin ekran boyunca hareket etmesi
     function moveEngels() {
@@ -145,6 +160,8 @@
                 tavsanPosition.top < engelPosition.bottom) {
                 alert("Oyun Bitti! Tavşan engelle çarpıştı.");
                 gameOver = true;
+                clearInterval(createInterval); // Engel oluşturmayı durdur
+                clearInterval(moveInterval);   // Engellerin hareketini durdur
                 showEnding(); // Oyun sonu mesajını göster
                 return;
             }
@@ -158,14 +175,13 @@
                 // Skor 50'ye ulaştıysa, oyunu bitir
                 if (score >= 50) {
                     gameOver = true;
+                    clearInterval(createInterval); // Engel oluşturmayı durdur
+                    clearInterval(moveInterval);   // Engellerin hareketini durdur
                     showEnding(); // Oyun sonu mesajını göster
                 }
             }
         }
     }
-
-    // Engellerin hareket etmesi her 20 milisaniyede bir
-    setInterval(moveEngels, 20);
 
     // Oyun sonu mesajını göster
     function showEnding() {
@@ -173,20 +189,7 @@
         scoreElement.style.display = 'none';   // Skoru gizle
         romanticMessageElement.style.display = 'block'; // Romantik mesajı göster
     }
-
-    // Oyunu başlat
-    function startGame() {
-        startButton.style.display = 'none';  // Başlat butonunu gizle
-        gameOver = false;
-        score = 0;
-        scoreElement.textContent = 'Skor: 0';
-        gameArea.innerHTML = '<div id="tavsan">🐇</div>'; // Tavşanı yeniden ekle
-        var tavsan = document.getElementById('tavsan');  // Tavşanı yeniden tanımla
-        // Skor ve oyun bitişi ile ilgili olayları başlat
-        setInterval(moveEngels, 20);
-        setInterval(createEngel, 2000);  // Engelleri başlat
-    }
 </script>
 
 </body>
-    </html>
+</html>

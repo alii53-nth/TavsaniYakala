@@ -1,88 +1,93 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavşanın Gizemi</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f7f7f7;
-            color: #333;
-            text-align: center;
-            padding: 30px;
-            user-select: none;
-        }
-        h1 {
-            font-size: 40px;
-            color: #ff1493;
-        }
-        #tavsan {
-            font-size: 60px;
-            display: block;
-            margin: 20px auto;
-            transition: transform 0.8s ease-in-out;
-        }
-        #mesaj {
-            font-size: 24px;
-            color: #333;
-            margin: 20px;
-        }
-        .kalp {
-            position: absolute;
-            font-size: 30px;
-            color: red;
-            animation: yukari 1.5s ease-in-out forwards;
-        }
-        @keyframes yukari {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>🐇 Mesaj Var!</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      padding: 30px;
+      font-size: 20px;
+    }
+    #terminal {
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    input {
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+      padding: 8px;
+      font-size: 18px;
+      width: 300px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
-<body onclick="ilerlet()">
+<body>
+  <div id="terminal"></div>
+  <input type="text" id="cevap" placeholder="cevabını yaz..." style="display:none;" />
 
-<h1>Tavşanın Gizemli Yolu</h1>
-<div id="tavsan">🐇</div>
-<p id="mesaj">Tavşan senden birşey saklıyor, bulmak için ekrana dokun!</p>
+  <script>
+    const mesajlar = [
+      "Hey Seyran, naber? 😊",
+      "Seni gördüğümden beri aklımdan çıkmıyorsun.",
+      "Adın kadar güzel bir gülüşün var, inan bana.",
+      "Sana bir sır vereyim...",
+      "Seninle konuşmak için sabırsızlanıyorum.",
+      "Bana cevap vermek ister misin? (kesinlikle / belki sonra)"
+    ];
 
-<script>
-    var asama = 0;
-    var tavsan = document.getElementById('tavsan');
-    var mesaj = document.getElementById('mesaj');
+    const terminal = document.getElementById("terminal");
+    const input = document.getElementById("cevap");
 
-    function ilerlet() {
-        if (asama === 0) {
-            tavsan.style.transform = 'translateX(150px)';
-            mesaj.innerHTML = "İlk adım atıldı, ama tavşan hala kaçıyor! 😅";
-        } else if (asama === 1) {
-            tavsan.style.transform = 'translateY(150px)';
-            mesaj.innerHTML = "İkinci adımı da attın, tavşan yaklaşmaya başladı!";
-        } else if (asama === 2) {
-            tavsan.style.transform = 'translateX(0) translateY(0)';
-            mesaj.innerHTML = "Tebrikler! Tavşanı yakaladın! 💖";
-            setTimeout(() => {
-                mesaj.innerHTML = "Çok Güzelsin! 🥰";
-                kalpEkle();
-            }, 1000);
-        }
-        asama++;
+    let index = 0;
+
+    function yaz(text, delay = 50) {
+      return new Promise(resolve => {
+        let i = 0;
+        let yazInterval = setInterval(() => {
+          terminal.innerHTML += text[i];
+          i++;
+          if (i >= text.length) {
+            clearInterval(yazInterval);
+            terminal.innerHTML += "\n\n";
+            resolve();
+          }
+        }, delay);
+      });
     }
 
-    function kalpEkle() {
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => {
-                let kalp = document.createElement("div");
-                kalp.innerHTML = "❤️";
-                kalp.classList.add("kalp");
-                kalp.style.left = Math.random() * window.innerWidth + "px";
-                kalp.style.top = (window.innerHeight - 50) + "px";
-                document.body.appendChild(kalp);
-                setTimeout(() => kalp.remove(), 1500);
-            }, i * 200);
-        }
-    }
-</script>
+    async function basla() {
+      for (const mesaj of mesajlar.slice(0, -1)) {
+        await yaz(mesaj);
+        await new Promise(r => setTimeout(r, 1000));
+      }
 
+      await yaz(mesajlar[mesajlar.length - 1]);
+      input.style.display = "block";
+      input.focus();
+
+      input.addEventListener("keydown", function handler(e) {
+        if (e.key === "Enter") {
+          const cevap = input.value.trim().toLowerCase();
+          input.removeEventListener("keydown", handler);
+          input.style.display = "none";
+
+          if (cevap === "kesinlikle") {
+            yaz("Vay be, seninle sohbet etmek için sabırsızlanıyorum! 🚀");
+          } else if (cevap === "belki sonra") {
+            yaz("Anladım, acele yok, ne zaman istersen buradayım! 😉");
+          } else {
+            yaz("Hmm, cevabını anlayamadım ama yine de teşekkürler! 😊");
+          }
+        }
+      });
+    }
+
+    basla();
+  </script>
 </body>
 </html>

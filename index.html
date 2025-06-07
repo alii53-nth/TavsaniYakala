@@ -1,93 +1,210 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>🐇 Mesaj Var!</title>
-  <style>
-    body {
-      background: #111;
-      color: #fff;
-      font-family: 'Courier New', monospace;
-      padding: 30px;
-      font-size: 20px;
-    }
-    #terminal {
-      white-space: pre-wrap;
-      line-height: 1.5;
-    }
-    input {
-      background: #222;
-      color: #fff;
-      border: 1px solid #555;
-      padding: 8px;
-      font-size: 18px;
-      width: 300px;
-      margin-top: 10px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rizeliusak Sohbet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+  body {
+    margin: 0; padding: 20px;
+    background: #ffe6f0 url('https://i.postimg.cc/tJw8rV35/heart-bg.png') repeat center center fixed;
+    font-family: 'Poppins', sans-serif;
+    display: flex; justify-content: center;
+  }
+  .chat-container {
+    width: 350px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column;
+    padding: 15px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .message {
+    max-width: 80%;
+    margin: 10px 0;
+    padding: 12px 18px;
+    border-radius: 20px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #222;
+    word-wrap: break-word;
+  }
+  .message.rizeliusak {
+    background: #ffd1dc;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+  }
+  .message.user {
+    background: #ff6495;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+  }
+  .timestamp {
+    font-size: 11px;
+    color: #999;
+    margin-top: 3px;
+    text-align: right;
+    font-weight: 500;
+    font-family: monospace;
+  }
+  .input-container {
+    margin-top: auto;
+    display: flex;
+  }
+  input[type="text"] {
+    flex-grow: 1;
+    padding: 10px 15px;
+    font-size: 15px;
+    border-radius: 20px;
+    border: 1.5px solid #ff6495;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+  }
+  button {
+    background: #ff6495;
+    border: none;
+    color: white;
+    padding: 0 18px;
+    margin-left: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #e25384;
+  }
+  .hearts {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 24px;
+    color: #ff3c78;
+    animation: floatHearts 2s ease-in-out infinite alternate;
+  }
+  @keyframes floatHearts {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+  }
+</style>
 </head>
 <body>
-  <div id="terminal"></div>
-  <input type="text" id="cevap" placeholder="cevabını yaz..." style="display:none;" />
+  <div class="chat-container" id="chat">
+    <!-- Mesajlar buraya eklenecek -->
+  </div>
 
-  <script>
-    const mesajlar = [
-      "Hey Seyran, naber? 😊",
-      "Seni gördüğümden beri aklımdan çıkmıyorsun.",
-      "Adın kadar güzel bir gülüşün var, inan bana.",
-      "Sana bir sır vereyim...",
-      "Seninle konuşmak için sabırsızlanıyorum.",
-      "Bana cevap vermek ister misin? (kesinlikle / belki sonra)"
-    ];
+  <div class="input-container">
+    <input type="text" id="userInput" placeholder="Cevabını yaz..." autocomplete="off" />
+    <button id="sendBtn">Gönder</button>
+  </div>
 
-    const terminal = document.getElementById("terminal");
-    const input = document.getElementById("cevap");
+<script>
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
 
-    let index = 0;
+  // Mesajları sırayla yazdıran async fonksiyon
+  async function slowPrint(text, container, className) {
+    return new Promise(resolve => {
+      const message = document.createElement('div');
+      message.className = 'message ' + className;
+      container.appendChild(message);
+      let i = 0;
 
-    function yaz(text, delay = 50) {
-      return new Promise(resolve => {
-        let i = 0;
-        let yazInterval = setInterval(() => {
-          terminal.innerHTML += text[i];
+      function writeChar() {
+        if (i < text.length) {
+          message.textContent += text.charAt(i);
           i++;
-          if (i >= text.length) {
-            clearInterval(yazInterval);
-            terminal.innerHTML += "\n\n";
-            resolve();
-          }
-        }, delay);
-      });
-    }
-
-    async function basla() {
-      for (const mesaj of mesajlar.slice(0, -1)) {
-        await yaz(mesaj);
-        await new Promise(r => setTimeout(r, 1000));
-      }
-
-      await yaz(mesajlar[mesajlar.length - 1]);
-      input.style.display = "block";
-      input.focus();
-
-      input.addEventListener("keydown", function handler(e) {
-        if (e.key === "Enter") {
-          const cevap = input.value.trim().toLowerCase();
-          input.removeEventListener("keydown", handler);
-          input.style.display = "none";
-
-          if (cevap === "kesinlikle") {
-            yaz("Vay be, seninle sohbet etmek için sabırsızlanıyorum! 🚀");
-          } else if (cevap === "belki sonra") {
-            yaz("Anladım, acele yok, ne zaman istersen buradayım! 😉");
-          } else {
-            yaz("Hmm, cevabını anlayamadım ama yine de teşekkürler! 😊");
-          }
+          setTimeout(writeChar, 30); // Harf gecikme (30 ms)
+        } else {
+          // Saat damgası ekle
+          const timestamp = document.createElement('div');
+          timestamp.className = 'timestamp';
+          const now = new Date();
+          timestamp.textContent = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+          message.appendChild(timestamp);
+          container.scrollTop = container.scrollHeight; // Otomatik scroll
+          resolve();
         }
-      });
-    }
+      }
+      writeChar();
+    });
+  }
 
-    basla();
-  </script>
+  async function chatFlow() {
+    // Rizeliusak mesajları
+    await slowPrint("Hey Seyran, naber? 😊", chat, 'rizeliusak');
+    await delay(1000);
+    await slowPrint("Seni gördüğümden beri aklımdan çıkmıyorsun.", chat, 'rizeliusak');
+    await delay(1000);
+    await slowPrint("Adın kadar güzel bir gülüşün var, inan bana.", chat, 'rizeliusak');
+    await delay(1000);
+    await slowPrint("Sana bir sır vereyim...", chat, 'rizeliusak');
+    await delay(2000);
+    await slowPrint("Seninle konuşmak için sabırsızlanıyorum.", chat, 'rizeliusak');
+    await delay(1000);
+    await slowPrint("Bana cevap vermek ister misin? (kesinlikle/belki sonra)", chat, 'rizeliusak');
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Mesaj gönderme ve cevap işlemleri
+  async function handleUserResponse(text) {
+    if (!text) return;
+
+    await slowPrint(text, chat, 'user');
+
+    if (text.toLowerCase() === "kesinlikle") {
+      await slowPrint("Vay be, seninle sohbet etmek için sabırsızlanıyorum! 🚀", chat, 'rizeliusak');
+      showHearts();
+    } else if (text.toLowerCase() === "belki sonra") {
+      await slowPrint("Anladım, acele yok, ne zaman istersen buradayım! 😉", chat, 'rizeliusak');
+    } else {
+      await slowPrint("Hmm, cevabını anlayamadım ama yine de teşekkürler! 😊", chat, 'rizeliusak');
+    }
+  }
+
+  function showHearts() {
+    const existing = document.querySelector('.hearts');
+    if (existing) return; // Zaten varsa ekleme
+
+    const hearts = document.createElement('div');
+    hearts.className = 'hearts';
+    hearts.textContent = '❤️❤️❤️';
+    chat.appendChild(hearts);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  sendBtn.addEventListener('click', async () => {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    await handleUserResponse(text);
+
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
+  });
+
+  input.addEventListener('keypress', async (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendBtn.click();
+    }
+  });
+
+  // Başlangıçta sohbeti başlat
+  chatFlow();
+</script>
 </body>
 </html>

@@ -8,15 +8,16 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
   body {
     margin: 0; padding: 20px;
-    background: #fff; /* arka plan temiz beyaz */
+    background: #fff; /* Arka plan sade beyaz */
     font-family: 'Poppins', sans-serif;
     display: flex; justify-content: center;
+    height: 100vh;
   }
   .chat-container {
     width: 350px;
-    background: white;
+    background: #fff;
     border-radius: 10px;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
     display: flex; flex-direction: column;
     padding: 15px;
     max-height: 90vh;
@@ -25,14 +26,13 @@
   .message {
     max-width: 80%;
     margin: 10px 0;
-    padding: 16px 22px;
+    padding: 12px 18px;
     border-radius: 20px;
     position: relative;
-    font-size: 18px;
-    line-height: 1.5;
-    color: #111;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #222;
     word-wrap: break-word;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   }
   .message.rizeliusak {
     background: #ffd1dc;
@@ -48,7 +48,7 @@
   .timestamp {
     font-size: 11px;
     color: #999;
-    margin-top: 5px;
+    margin-top: 3px;
     text-align: right;
     font-weight: 500;
     font-family: monospace;
@@ -59,12 +59,17 @@
   }
   input[type="text"] {
     flex-grow: 1;
-    padding: 12px 18px;
-    font-size: 16px;
+    padding: 10px 15px;
+    font-size: 15px;
     border-radius: 20px;
     border: 1.5px solid #ff6495;
     outline: none;
     font-family: 'Poppins', sans-serif;
+
+    /* HİÇBİR hareket animasyonu olmasın */
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
   }
   button {
     background: #ff6495;
@@ -75,8 +80,8 @@
     border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 15px;
+    transition: none !important; /* hareket yok */
   }
   button:hover {
     background: #e25384;
@@ -84,7 +89,7 @@
   .hearts {
     text-align: center;
     margin-top: 15px;
-    font-size: 28px;
+    font-size: 24px;
     color: #ff3c78;
     animation: floatHearts 2s ease-in-out infinite alternate;
   }
@@ -109,7 +114,7 @@
   const input = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
 
-  // Mesajları sırayla yazdıran async fonksiyon
+  // Mesajları harf harf yazdıran fonksiyon
   async function slowPrint(text, container, className) {
     return new Promise(resolve => {
       const message = document.createElement('div');
@@ -136,6 +141,11 @@
     });
   }
 
+  // Kısa bekleme fonksiyonu
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async function chatFlow() {
     await slowPrint("Hey Seyran, naber? 😊", chat, 'rizeliusak');
     await delay(1000);
@@ -148,10 +158,6 @@
     await slowPrint("Seninle konuşmak için sabırsızlanıyorum.", chat, 'rizeliusak');
     await delay(1000);
     await slowPrint("Bana cevap vermek ister misin? (kesinlikle/belki sonra)", chat, 'rizeliusak');
-  }
-
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async function handleUserResponse(text) {
@@ -170,7 +176,7 @@
   }
 
   function showHearts() {
-    if(document.querySelector('.hearts')) return;
+    if (document.querySelector('.hearts')) return;
 
     const hearts = document.createElement('div');
     hearts.className = 'hearts';
@@ -200,7 +206,11 @@
     }
   });
 
-  chatFlow();
+  // Sayfa açılır açılmaz otomatik sohbet başlasın
+  window.onload = () => {
+    chatFlow();
+    input.focus();
+  };
 </script>
 </body>
 </html>

@@ -94,9 +94,7 @@
 </style>
 </head>
 <body>
-  <div class="chat-container" id="chat">
-    <!-- Mesajlar buraya eklenecek -->
-  </div>
+  <div class="chat-container" id="chat"></div>
 
   <div class="input-container">
     <input type="text" id="userInput" placeholder="Cevabını yaz..." autocomplete="off" />
@@ -108,7 +106,10 @@
   const input = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
 
-  // Mesajları sırayla yazdıran async fonksiyon
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async function slowPrint(text, container, className) {
     return new Promise(resolve => {
       const message = document.createElement('div');
@@ -120,15 +121,14 @@
         if (i < text.length) {
           message.textContent += text.charAt(i);
           i++;
-          setTimeout(writeChar, 30); // Harf gecikme (30 ms)
+          setTimeout(writeChar, 30);
         } else {
-          // Saat damgası ekle
           const timestamp = document.createElement('div');
           timestamp.className = 'timestamp';
           const now = new Date();
           timestamp.textContent = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
           message.appendChild(timestamp);
-          container.scrollTop = container.scrollHeight; // Otomatik scroll
+          container.scrollTop = container.scrollHeight;
           resolve();
         }
       }
@@ -137,7 +137,6 @@
   }
 
   async function chatFlow() {
-    // Rizeliusak mesajları
     await slowPrint("Hey Seyran, naber? 😊", chat, 'rizeliusak');
     await delay(1000);
     await slowPrint("Seni gördüğümden beri aklımdan çıkmıyorsun.", chat, 'rizeliusak');
@@ -151,11 +150,6 @@
     await slowPrint("Bana cevap vermek ister misin? (kesinlikle/belki sonra)", chat, 'rizeliusak');
   }
 
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  // Mesaj gönderme ve cevap işlemleri
   async function handleUserResponse(text) {
     if (!text) return;
 
@@ -172,9 +166,7 @@
   }
 
   function showHearts() {
-    const existing = document.querySelector('.hearts');
-    if (existing) return; // Zaten varsa ekleme
-
+    if (document.querySelector('.hearts')) return;
     const hearts = document.createElement('div');
     hearts.className = 'hearts';
     hearts.textContent = '❤️❤️❤️';
@@ -203,8 +195,10 @@
     }
   });
 
-  // Başlangıçta sohbeti başlat
-  chatFlow();
+  // Sayfa yüklendiğinde otomatik başlat
+  window.addEventListener('load', () => {
+    chatFlow();
+  });
 </script>
 </body>
 </html>

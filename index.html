@@ -8,11 +8,34 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
   body {
     margin: 0; padding: 20px;
-    background: #ffe6f0 url('https://i.postimg.cc/tJw8rV35/heart-bg.png') repeat center center fixed;
+    background: #ffe6f0;
     font-family: 'Poppins', sans-serif;
     display: flex; justify-content: center;
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  /* Arka plandaki kalpler */
+  .hearts {
+    position: fixed; /* sayfa boyunca */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    color: #ff3c78;
+    opacity: 0.1;
+    z-index: 1; /* çok altta */
+    pointer-events: none; /* tıklanmasın */
+    user-select: none;
+    animation: floatHearts 4s ease-in-out infinite alternate;
+  }
+  @keyframes floatHearts {
+    0% { transform: translate(-50%, -50%) translateY(0); }
+    100% { transform: translate(-50%, -50%) translateY(-20px); }
   }
   .chat-container {
+    position: relative;
+    z-index: 10; /* kalplerin üstünde */
     width: 350px;
     background: white;
     border-radius: 10px;
@@ -80,36 +103,27 @@
   button:hover {
     background: #e25384;
   }
-  .hearts {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 24px;
-    color: #ff3c78;
-    animation: floatHearts 2s ease-in-out infinite alternate;
-  }
-  @keyframes floatHearts {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-10px); }
-  }
 </style>
 </head>
 <body>
-  <div class="chat-container" id="chat"></div>
+  <div class="chat-container" id="chat">
+    <!-- Mesajlar buraya eklenecek -->
+  </div>
 
   <div class="input-container">
     <input type="text" id="userInput" placeholder="Cevabını yaz..." autocomplete="off" />
     <button id="sendBtn">Gönder</button>
   </div>
 
+  <div class="hearts" id="hearts" style="display:none;">❤️❤️❤️</div>
+
 <script>
   const chat = document.getElementById('chat');
   const input = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
+  const hearts = document.getElementById('hearts');
 
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
+  // Mesajları harf harf yazdıran async fonksiyon
   async function slowPrint(text, container, className) {
     return new Promise(resolve => {
       const message = document.createElement('div');
@@ -123,6 +137,7 @@
           i++;
           setTimeout(writeChar, 30);
         } else {
+          // Saat damgası ekle
           const timestamp = document.createElement('div');
           timestamp.className = 'timestamp';
           const now = new Date();
@@ -134,6 +149,10 @@
       }
       writeChar();
     });
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async function chatFlow() {
@@ -166,12 +185,7 @@
   }
 
   function showHearts() {
-    if (document.querySelector('.hearts')) return;
-    const hearts = document.createElement('div');
-    hearts.className = 'hearts';
-    hearts.textContent = '❤️❤️❤️';
-    chat.appendChild(hearts);
-    chat.scrollTop = chat.scrollHeight;
+    hearts.style.display = 'block';
   }
 
   sendBtn.addEventListener('click', async () => {
@@ -195,10 +209,7 @@
     }
   });
 
-  // Sayfa yüklendiğinde otomatik başlat
-  window.addEventListener('load', () => {
-    chatFlow();
-  });
+  chatFlow();
 </script>
 </body>
 </html>

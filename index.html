@@ -1,100 +1,99 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rizeliusak Sohbet</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-  body {
-    margin: 0; padding: 20px;
-    background: #f9f9f9;
-    font-family: 'Poppins', sans-serif;
-    display: flex; justify-content: center; align-items: center;
-    height: 100vh;
-  }
-  .chat-container {
-    width: 350px;
-    max-height: 90vh;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
-  }
-  .message {
-    max-width: 75%;
-    margin: 10px 0;
-    padding: 12px 18px;
-    border-radius: 20px;
-    position: relative;
-    font-size: 15px;
-    line-height: 1.4;
-    word-wrap: break-word;
-  }
-  .message.rizeliusak {
-    background: #ffd1dc;
-    color: #222;
-    align-self: flex-start;
-    border-bottom-left-radius: 0;
-  }
-  .message.user {
-    background: #ff6495;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 0;
-  }
-  .timestamp {
-    font-size: 11px;
-    color: #999;
-    margin-top: 5px;
-    text-align: right;
-    font-weight: 500;
-    font-family: monospace;
-  }
-  .input-container {
-    margin-top: auto;
-    display: flex;
-    gap: 10px;
-  }
-  input[type="text"] {
-    flex-grow: 1;
-    padding: 10px 15px;
-    font-size: 15px;
-    border-radius: 20px;
-    border: 1.5px solid #ff6495;
-    outline: none;
-    font-family: 'Poppins', sans-serif;
-  }
-  button {
-    background: #ff6495;
-    border: none;
-    color: white;
-    padding: 0 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 15px;
-    transition: background-color 0.3s ease;
-  }
-  button:hover:not(:disabled) {
-    background: #e25384;
-  }
-  button:disabled {
-    background: #ffb0c1;
-    cursor: default;
-  }
-  /* Scrollbar stil */
-  .chat-container::-webkit-scrollbar {
-    width: 6px;
-  }
-  .chat-container::-webkit-scrollbar-thumb {
-    background-color: #ff6495aa;
-    border-radius: 3px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rizeliusak Sohbet</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+    body {
+      margin: 0; padding: 20px;
+      background: #f9f9f9;
+      font-family: 'Poppins', sans-serif;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 350px;
+      max-height: 90vh;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      overflow-y: auto;
+    }
+    .message {
+      max-width: 75%;
+      margin: 10px 0;
+      padding: 12px 18px;
+      border-radius: 20px;
+      position: relative;
+      font-size: 15px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+    .message.rizeliusak {
+      background: #ffd1dc;
+      color: #222;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+    .message.user {
+      background: #ff6495;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+    .timestamp {
+      font-size: 11px;
+      color: #999;
+      margin-top: 5px;
+      text-align: right;
+      font-weight: 500;
+      font-family: monospace;
+    }
+    .input-container {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+    }
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 10px 15px;
+      font-size: 15px;
+      border-radius: 20px;
+      border: 1.5px solid #ff6495;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    button {
+      background: #ff6495;
+      border: none;
+      color: white;
+      padding: 0 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover:not(:disabled) {
+      background: #e25384;
+    }
+    button:disabled {
+      background: #ffb0c1;
+      cursor: default;
+    }
+    .chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-container::-webkit-scrollbar-thumb {
+      background-color: #ff6495aa;
+      border-radius: 3px;
+    }
+  </style>
 </head>
 <body>
   <div class="chat-container" id="chat"></div>
@@ -110,12 +109,12 @@
   const sendBtn = document.getElementById('sendBtn');
 
   const messages = [
-    { text: "Hey Seyran, naber? 😊", waitForAnswer: false },
-    { text: "Seni gördüğümden beri aklımdan çıkmıyorsun.", waitForAnswer: false },
-    { text: "Adın kadar güzel bir gülüşün var, inan bana.", waitForAnswer: false },
-    { text: "Sana bir sır vereyim...", waitForAnswer: false },
-    { text: "Seninle konuşmak için sabırsızlanıyorum.", waitForAnswer: false },
-    { text: "Bana cevap vermek ister misin? (kesinlikle/belki sonra)", waitForAnswer: true }
+    { text: "Selam Seyran 🌸 Nasılsın bu akşam?", waitForAnswer: false },
+    { text: "Seni görünce içimde bi kıpırtı oluyor... anlatamam 😅", waitForAnswer: false },
+    { text: "Şu gülüşün var ya... insanın içini ısıtıyor yeminle", waitForAnswer: false },
+    { text: "Sana bir şey desem... ama aramızda kalır değil mi? 🙊", waitForAnswer: false },
+    { text: "Seninle konuşmak bana iyi geliyor, bilmiyorum hissediyor musun...", waitForAnswer: false },
+    { text: "Sen ne düşünüyorsun? (kesinlikle/belki sonra)", waitForAnswer: true }
   ];
 
   let currentMessageIndex = 0;
@@ -156,7 +155,6 @@
       await slowPrint(msg.text, chat, 'rizeliusak');
 
       if (msg.waitForAnswer) {
-        // Cevap bekleniyor, input aktif et
         input.disabled = false;
         sendBtn.disabled = false;
         input.focus();
@@ -171,24 +169,21 @@
   async function handleUserResponse(text) {
     if (!text) return;
 
-    // Kullanıcı mesajı yazdır
     await slowPrint(text, chat, 'user');
 
     input.value = '';
     input.disabled = true;
     sendBtn.disabled = true;
 
-    // Bot cevabı
     if (text.toLowerCase() === "kesinlikle") {
-      await slowPrint("Vay be, seninle sohbet etmek için sabırsızlanıyorum! 🚀", chat, 'rizeliusak');
+      await slowPrint("Bak şimdi kalbim hızlı atıyor... bunu sen yaptın 🫀✨", chat, 'rizeliusak');
       showHearts();
     } else if (text.toLowerCase() === "belki sonra") {
-      await slowPrint("Anladım, acele yok, ne zaman istersen buradayım! 😉", chat, 'rizeliusak');
+      await slowPrint("Tamam canım, zaman senin... ben buradayım 🍃", chat, 'rizeliusak');
     } else {
-      await slowPrint("Hmm, cevabını anlayamadım ama yine de teşekkürler! 😊", chat, 'rizeliusak');
+      await slowPrint("Hımm... tam anlayamadım ama cevap vermen yeterliydi ☺️", chat, 'rizeliusak');
     }
 
-    // Sonraki mesajlara devam et
     currentMessageIndex++;
     await delay(1000);
     await chatFlow();
@@ -219,7 +214,6 @@
     }
   });
 
-  // Başlat
   chatFlow();
 </script>
 </body>

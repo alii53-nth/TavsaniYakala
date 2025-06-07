@@ -8,20 +8,21 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
   body {
     margin: 0; padding: 20px;
-    background: #fff; /* Arka plan sade beyaz */
+    background: white; /* Gri arka plan kaldırıldı, sade beyaz oldu */
     font-family: 'Poppins', sans-serif;
     display: flex; justify-content: center;
-    height: 100vh;
   }
   .chat-container {
     width: 350px;
-    background: #fff;
+    background: white;
     border-radius: 10px;
     box-shadow: 0 8px 15px rgba(0,0,0,0.2);
     display: flex; flex-direction: column;
     padding: 15px;
     max-height: 90vh;
     overflow-y: auto;
+    position: relative;
+    z-index: 1;
   }
   .message {
     max-width: 80%;
@@ -56,6 +57,8 @@
   .input-container {
     margin-top: auto;
     display: flex;
+    position: relative;
+    z-index: 1;
   }
   input[type="text"] {
     flex-grow: 1;
@@ -65,11 +68,6 @@
     border: 1.5px solid #ff6495;
     outline: none;
     font-family: 'Poppins', sans-serif;
-
-    /* HİÇBİR hareket animasyonu olmasın */
-    transition: none !important;
-    animation: none !important;
-    transform: none !important;
   }
   button {
     background: #ff6495;
@@ -81,7 +79,7 @@
     cursor: pointer;
     font-weight: 600;
     font-size: 15px;
-    transition: none !important; /* hareket yok */
+    transition: background-color 0.3s ease;
   }
   button:hover {
     background: #e25384;
@@ -92,6 +90,8 @@
     font-size: 24px;
     color: #ff3c78;
     animation: floatHearts 2s ease-in-out infinite alternate;
+    position: relative;
+    z-index: 1;
   }
   @keyframes floatHearts {
     0% { transform: translateY(0); }
@@ -114,7 +114,6 @@
   const input = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
 
-  // Mesajları harf harf yazdıran fonksiyon
   async function slowPrint(text, container, className) {
     return new Promise(resolve => {
       const message = document.createElement('div');
@@ -141,11 +140,6 @@
     });
   }
 
-  // Kısa bekleme fonksiyonu
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   async function chatFlow() {
     await slowPrint("Hey Seyran, naber? 😊", chat, 'rizeliusak');
     await delay(1000);
@@ -158,6 +152,10 @@
     await slowPrint("Seninle konuşmak için sabırsızlanıyorum.", chat, 'rizeliusak');
     await delay(1000);
     await slowPrint("Bana cevap vermek ister misin? (kesinlikle/belki sonra)", chat, 'rizeliusak');
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async function handleUserResponse(text) {
@@ -176,7 +174,8 @@
   }
 
   function showHearts() {
-    if (document.querySelector('.hearts')) return;
+    const existing = document.querySelector('.hearts');
+    if (existing) return;
 
     const hearts = document.createElement('div');
     hearts.className = 'hearts';
@@ -206,11 +205,7 @@
     }
   });
 
-  // Sayfa açılır açılmaz otomatik sohbet başlasın
-  window.onload = () => {
-    chatFlow();
-    input.focus();
-  };
+  chatFlow();
 </script>
 </body>
 </html>
